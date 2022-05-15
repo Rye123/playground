@@ -20,7 +20,7 @@ void ArrayListTest() {
 
     // Test for element addition
     printf("Adding elements to end of arrLs:\n");
-    int insertElems[6] = {6, 7, 8, 9, 10, 11};
+    int insertElems[6] = {11,12,13,14,15,16};
     for (int i = 0; i < sizeof(insertElems)/sizeof(int); i++){
         intArrayListInsert(&arrLs, arrLs.size, insertElems[i]);
         printf("Inserted %d at end of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", insertElems[i], arrLs.size, arrLs.__allocatedSize);

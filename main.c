@@ -55,18 +55,18 @@ void ArrayListTest() {
     printf("]\n");
 
     // Error Testing
-    /*
-    printf("Testing access of out-of-bound index:");
-    printf("%d\n", intArrayListGet(&arrLs, 69));
-    printf("Testing access of out-of-bound index exactly at size:");
-    printf("%d\n", intArrayListGet(&arrLs, arrLs.size));
-    printf("Testing access of negative index: ");
-    printf("%d\n", intArrayListGet(&arrLs, -1));
-    printf("Testing insertion to out-of-bound index.\n");
-    intArrayListInsert(&arrLs, 42, 5);
-    printf("Testing removal of out-of-bound index: ");
-    printf("%d\n", intArrayListRemove(&arrLs, arrLs.size));
-    */
+    
+    // printf("Testing access of out-of-bound index:\n");
+    // printf("%d\n", intArrayListGet(&arrLs, 69));
+    // printf("Testing access of out-of-bound index exactly at size:\n");
+    // printf("%d\n", intArrayListGet(&arrLs, arrLs.size));
+    // printf("Testing access of negative index: \n");
+    // printf("%d\n", intArrayListGet(&arrLs, -1));
+    // printf("Testing insertion to out-of-bound index.\n");
+    // intArrayListInsert(&arrLs, 42, 5);
+    // printf("Testing removal of out-of-bound index:\n");
+    // printf("%d\n", intArrayListRemove(&arrLs, arrLs.size));
+    
     
     intArrayListFree(&arrLs);
 }

@@ -4,6 +4,7 @@
 typedef struct IntArrayList {
     int* contents;
     size_t size;
+    size_t __elementSize;
     size_t __allocatedSize;
 } IntArrayList;
 

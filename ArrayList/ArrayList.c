@@ -9,9 +9,10 @@
  */
 IntArrayList arrayToIntArrayList(int* array, size_t arraySize) {
     IntArrayList intArrayList;
+    intArrayList.__elementSize = sizeof(int);
     intArrayList.__allocatedSize = arraySize;
     intArrayList.size = arraySize;
-    intArrayList.contents = (int*) malloc(sizeof(int) * arraySize);
+    intArrayList.contents = (int*) malloc(intArrayList.__elementSize * intArrayList.__allocatedSize);
     for (int i = 0; i < intArrayList.size; i++) {
         intArrayList.contents[i] = array[i];
     }
@@ -105,7 +106,7 @@ void intArrayListFree(IntArrayList* intArrayList) {
 }
 
 void __intArrayListAllocateSpace(IntArrayList* intArrayList, size_t newSize) {
-    int* newContents = realloc(intArrayList->contents, newSize);
+    int* newContents = realloc(intArrayList->contents, newSize * intArrayList->__elementSize);
     intArrayList->contents = newContents;
     intArrayList->__allocatedSize = newSize;
 }

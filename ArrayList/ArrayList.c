@@ -75,7 +75,24 @@ void intArrayListInsert(IntArrayList* intArrayList, size_t i, int value) {
  * @return int 
  */
 int intArrayListRemove(IntArrayList* intArrayList, size_t i) {
+    size_t newSize = intArrayList->size - 1;
+    
+    // ensure index is within bounds
+    if (i >= intArrayList->size) {
+        fprintf(stderr, "ERROR: IntArrayList Out of Bounds Error\n");
+        exit(EXIT_FAILURE);
+    }
 
+    // if i == newSize, we can just skip to modifying the size. 
+    // otherwise, we need to shift elems after i leftward
+    int returnValue = intArrayList->contents[i];
+    if (i != newSize) {
+        for (int j = i; j < newSize; j++) {
+            intArrayList->contents[j] = intArrayList->contents[j+1];
+        }
+    }
+    intArrayList->size = newSize;
+    return returnValue;
 }
 
 /**

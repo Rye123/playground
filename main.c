@@ -26,6 +26,21 @@ int main() {
     }
     printf("\n");
 
+    printf("Removing elements:\n");
+    int removed = intArrayListRemove(&arrayList, arrayList.size-1);
+    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
+    removed = intArrayListRemove(&arrayList, arrayList.size-1);
+    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
+    removed = intArrayListRemove(&arrayList, 0);
+    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
+    removed = intArrayListRemove(&arrayList, 3);
+    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
+    printf("Printing contents of new arrayList:\n");
+    for (int i = 0; i < arrayList.size; i++) {
+        printf("%d, ArrayList Size: %lu, ArrayList Allocated Size: %lu\n", intArrayListGet(&arrayList, i), arrayList.size, arrayList.__allocatedSize);
+    }
+    printf("\n");
+
     intArrayListFree(&arrayList);
     return 0;
 }

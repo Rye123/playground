@@ -14,9 +14,11 @@ typedef struct IntLinkedList {
     size_t size;
 } IntLinkedList;
 
-IntLinkedList arrayToIntLinkedList(int* array, size_t arraySize);
+
+IntLinkedList intLinkedListNew();
+IntLinkedList intLinkedListFromArray(int* array, size_t arraySize);
+void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int val);
 int intLinkedListGet(IntLinkedList* intLinkedList, size_t i);
-void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int value);
 int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i);
 void intLinkedListFree(IntLinkedList* intLinkedList);
 void __intLinkedListAllocateSpace(IntLinkedList* intLinkedList, size_t newSize);

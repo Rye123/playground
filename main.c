@@ -1,5 +1,6 @@
 #include "main.h"
 #include "ArrayList/ArrayList.h"
+#include "LinkedList/LinkedList.h"
 
 
 void ArrayListTest() {
@@ -69,6 +70,75 @@ void ArrayListTest() {
     
     
     intArrayListFree(&arrLs);
+}
+
+void LinkedListTest() {/*
+    int arr[5] = {1, 2, 3, 4, 5};
+    printf("Printing original array: [ ");
+    for (int i = 0; i < sizeof(arr)/sizeof(int); i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("]\n");
+
+    // Test for conversion from array to linkedlist
+    IntLinkedList lkLs = arrayToIntLinkedList(arr, sizeof(arr)/sizeof(int));
+    printf("Printing lkLs: [ ");
+    for (int i = 0; i < lkLs.size; i++) {
+        printf("%d ", intLinkedListGet(&lkLs, i));
+    }
+    printf("]\n");
+
+    // Test for element addition
+    printf("Adding elements to end of lkLs:\n");
+    int insertElems[6] = {11,12,13,14,15,16};
+    for (int i = 0; i < sizeof(insertElems)/sizeof(int); i++){
+        intLinkedListInsert(&lkLs, lkLs.size, insertElems[i]);
+        printf("Inserted %d at end of lkLs, lkLs.size = %lu\n", insertElems[i], lkLs.size);
+    }
+    
+    intLinkedListInsert(&lkLs, 2, 66);
+    printf("Inserted 66 at index 2 of lkLs, lkLs.size = %lu\n", lkLs.size);
+    printf("Printing new lkLs: [ ");
+    for (int i = 0; i < lkLs.size; i++) {
+        printf("%d ", intLinkedListGet(&lkLs, i));
+    }
+    printf("]\n");
+
+    // Test for element removal
+    printf("Removing 3 elements from end of lkLs: \n");
+    for (int i = 0; i < 2; i++) {
+        int removed = intLinkedListRemove(&lkLs, lkLs.size-1);
+        printf("Removed %d from end of lkLs, lkLs.size = %lu\n", removed, lkLs.size);
+    }
+    printf("Printing new lkLs: [ ");
+    for (int i = 0; i < lkLs.size; i++) {
+        printf("%d ", intLinkedListGet(&lkLs, i));
+    }
+    printf("]\n");
+    printf("Removing element from index 2:\n");
+    int removed = intLinkedListRemove(&lkLs, 2);
+    printf("Removed %d from end of lkLs, lkLs.size = %lu\n", removed, lkLs.size);
+    printf("Printing new lkLs: [ ");
+    for (int i = 0; i < lkLs.size; i++) {
+        printf("%d ", intLinkedListGet(&lkLs, i));
+    }
+    printf("]\n");
+
+    // Error Testing
+    
+    // printf("Testing access of out-of-bound index:\n");
+    // printf("%d\n", intLinkedListGet(&lkLs, 69));
+    // printf("Testing access of out-of-bound index exactly at size:\n");
+    // printf("%d\n", intLinkedListGet(&lkLs, lkLs.size));
+    // printf("Testing access of negative index: \n");
+    // printf("%d\n", intLinkedListGet(&lkLs, -1));
+    // printf("Testing insertion to out-of-bound index.\n");
+    // intLinkedListInsert(&lkLs, 42, 5);
+    // printf("Testing removal of out-of-bound index:\n");
+    // printf("%d\n", intLinkedListRemove(&lkLs, lkLs.size));
+    
+    
+    intLinkedListFree(&lkLs);*/
 }
 
 int main() {

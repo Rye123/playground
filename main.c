@@ -1,46 +1,75 @@
 #include "main.h"
 #include "ArrayList/ArrayList.h"
 
-int main() {
+
+void ArrayListTest() {
     int arr[5] = {1, 2, 3, 4, 5};
-    printf("Printing contents of original array:\n");
+    printf("Printing original array: [ ");
     for (int i = 0; i < sizeof(arr)/sizeof(int); i++) {
-        printf("%d\n", arr[i]);
+        printf("%d ", arr[i]);
     }
-    printf("\n");
+    printf("]\n");
 
-    IntArrayList arrayList = arrayToIntArrayList(arr, sizeof(arr)/sizeof(int));
-    printf("Printing contents of original arrayList:\n");
-    for (int i = 0; i < arrayList.size; i++) {
-        printf("%d\n", intArrayListGet(&arrayList, i));
+    // Test for conversion from array to arraylist
+    IntArrayList arrLs = arrayToIntArrayList(arr, sizeof(arr)/sizeof(int));
+    printf("Printing arrLs: [ ");
+    for (int i = 0; i < arrLs.size; i++) {
+        printf("%d ", intArrayListGet(&arrLs, i));
     }
-    printf("\n");
+    printf("]\n");
 
-    intArrayListInsert(&arrayList, arrayList.size, 6);
-    intArrayListInsert(&arrayList, arrayList.size, 7);
-    intArrayListInsert(&arrayList, 2, 8);
-    intArrayListInsert(&arrayList, arrayList.size, 9);
-    printf("Printing contents of new arrayList:\n");
-    for (int i = 0; i < arrayList.size; i++) {
-        printf("%d, ArrayList Size: %lu, ArrayList Allocated Size: %lu\n", intArrayListGet(&arrayList, i), arrayList.size, arrayList.__allocatedSize);
+    // Test for element addition
+    printf("Adding elements to end of arrLs:\n");
+    int insertElems[6] = {6, 7, 8, 9, 10, 11};
+    for (int i = 0; i < sizeof(insertElems)/sizeof(int); i++){
+        intArrayListInsert(&arrLs, arrLs.size, insertElems[i]);
+        printf("Inserted %d at end of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", insertElems[i], arrLs.size, arrLs.__allocatedSize);
     }
-    printf("\n");
-
-    printf("Removing elements:\n");
-    int removed = intArrayListRemove(&arrayList, arrayList.size-1);
-    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
-    removed = intArrayListRemove(&arrayList, arrayList.size-1);
-    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
-    removed = intArrayListRemove(&arrayList, 0);
-    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
-    removed = intArrayListRemove(&arrayList, 3);
-    printf("Removed %d, new ArrayList Size: %lu, new ArrayList Allocated Size: %lu\n", removed, arrayList.size, arrayList.__allocatedSize);
-    printf("Printing contents of new arrayList:\n");
-    for (int i = 0; i < arrayList.size; i++) {
-        printf("%d, ArrayList Size: %lu, ArrayList Allocated Size: %lu\n", intArrayListGet(&arrayList, i), arrayList.size, arrayList.__allocatedSize);
+    
+    intArrayListInsert(&arrLs, 2, 66);
+    printf("Inserted 66 at index 2 of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", arrLs.size, arrLs.__allocatedSize);
+    printf("Printing new arrLs: [");
+    for (int i = 0; i < arrLs.size; i++) {
+        printf("%d ", intArrayListGet(&arrLs, i));
     }
-    printf("\n");
+    printf("]\n");
 
-    intArrayListFree(&arrayList);
+    // Test for element removal
+    printf("Removing 3 elements from end of arrLs: \n");
+    for (int i = 0; i < 2; i++) {
+        int removed = intArrayListRemove(&arrLs, arrLs.size-1);
+        printf("Removed %d from end of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", removed, arrLs.size, arrLs.__allocatedSize);
+    }
+    printf("Printing new arrLs: [");
+    for (int i = 0; i < arrLs.size; i++) {
+        printf("%d ", intArrayListGet(&arrLs, i));
+    }
+    printf("]\n");
+    printf("Removing element from index 2:\n");
+    int removed = intArrayListRemove(&arrLs, 2);
+    printf("Removed %d from end of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", removed, arrLs.size, arrLs.__allocatedSize);
+    printf("Printing new arrLs: [");
+    for (int i = 0; i < arrLs.size; i++) {
+        printf("%d ", intArrayListGet(&arrLs, i));
+    }
+    printf("]\n");
+
+    // Error Testing
+    /*printf("Testing access of out-of-bound index:");
+    printf("%d\n", intArrayListGet(&arrLs, 69));
+    printf("Testing access of out-of-bound index exactly at size:");
+    printf("%d\n", intArrayListGet(&arrLs, arrLs.size));
+    printf("Testing access of negative index: ");
+    printf("%d\n", intArrayListGet(&arrLs, -1));
+    printf("Testing insertion to out-of-bound index.\n");
+    intArrayListInsert(&arrLs, 42, 5);
+    printf("Testing removal of out-of-bound index: ");
+    printf("%d\n", intArrayListRemove(&arrLs, arrLs.size));*/
+    
+    intArrayListFree(&arrLs);
+}
+
+int main() {
+    ArrayListTest();
     return 0;
 }

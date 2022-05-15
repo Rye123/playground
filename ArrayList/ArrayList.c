@@ -1,13 +1,27 @@
 #include "ArrayList.h"
 
 /**
+ * @brief Returns an empty IntArrayList
+ * 
+ * @return IntArrayList 
+ */
+IntArrayList intArrayListNew() {
+    IntArrayList intArrayList;
+    intArrayList.__elementSize = sizeof(int);
+    intArrayList.__allocatedSize = 1; // can contain at least one element before reallocation
+    intArrayList.contents = (int*) malloc(intArrayList.__elementSize * intArrayList.__allocatedSize);
+    intArrayList.size = 0;
+    return intArrayList;
+}
+
+/**
  * @brief Converts a fixed-size integer array into an IntArrayList
  * 
  * @param array A fixed size integer array
  * @param arraySize Size of integer array
  * @return IntArrayList 
  */
-IntArrayList arrayToIntArrayList(int* array, size_t arraySize) {
+IntArrayList intArrayListFromArray(int* array, size_t arraySize) {
     IntArrayList intArrayList;
     intArrayList.__elementSize = sizeof(int);
     intArrayList.__allocatedSize = arraySize;

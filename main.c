@@ -12,7 +12,7 @@ void ArrayListTest() {
     printf("]\n");
 
     // Test for conversion from array to arraylist
-    IntArrayList arrLs = arrayToIntArrayList(arr, sizeof(arr)/sizeof(int));
+    IntArrayList arrLs = intArrayListFromArray(arr, sizeof(arr)/sizeof(int));
     printf("Printing arrLs: [ ");
     for (int i = 0; i < arrLs.size; i++) {
         printf("%d ", intArrayListGet(&arrLs, i));
@@ -69,6 +69,14 @@ void ArrayListTest() {
     // printf("%d\n", intArrayListRemove(&arrLs, arrLs.size));
     
     
+    intArrayListFree(&arrLs);
+}
+
+void ArrayListTest2() {
+    // Initialise empty ArrayList
+    IntArrayList arrLs = intArrayListNew();
+    intArrayListInsert(&arrLs, arrLs.size, 5);
+    printf("%d\n", intArrayListGet(&arrLs, 0));
     intArrayListFree(&arrLs);
 }
 
@@ -142,6 +150,6 @@ void LinkedListTest() {/*
 }
 
 int main() {
-    ArrayListTest();
+    ArrayListTest2();
     return 0;
 }

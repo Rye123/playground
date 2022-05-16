@@ -35,7 +35,7 @@ void ArrayListTest() {
     printf("]\n");
 
     // Test for element removal
-    printf("Removing 3 elements from end of arrLs: \n");
+    printf("Removing 2 elements from end of arrLs: \n");
     for (int i = 0; i < 2; i++) {
         int removed = intArrayListRemove(&arrLs, arrLs.size-1);
         printf("Removed %d from end of arrLs, arrLs.size = %lu, arrLs.__allocatedSize = %lu\n", removed, arrLs.size, arrLs.__allocatedSize);
@@ -126,5 +126,7 @@ void LinkedListTest() {
 
 int main() {
     LinkedListTest();
+    // ArrayListTest();
+    // ArrayListTest2();
     return 0;
 }

@@ -41,10 +41,9 @@ IntArrayList intArrayListFromArray(int* array, size_t arraySize) {
  * @return int 
  */
 int intArrayListGet(IntArrayList* intArrayList, size_t i) {
-    if (i < intArrayList->size)
-        return intArrayList->contents[i];
-    fprintf(stderr, "ERROR: IntArrayList Out of Bounds Error\n");
-    exit(EXIT_FAILURE);
+    if (i >= intArrayList->size)
+        __intArrayListOutOfBoundsError();
+    return intArrayList->contents[i];
 }
 
 /**
@@ -57,10 +56,8 @@ int intArrayListGet(IntArrayList* intArrayList, size_t i) {
 void intArrayListInsert(IntArrayList* intArrayList, size_t i, int value) {
     size_t newSize = intArrayList->size + 1;
     // ensure index is within bounds
-    if (i >= newSize) {
-        fprintf(stderr, "ERROR: IntArrayList Out of Bounds Error\n");
-        exit(EXIT_FAILURE);
-    }
+    if (i >= newSize)
+        __intArrayListOutOfBoundsError();
 
     // check if arrayList already has space. allocate if necessary
     if (intArrayList->__allocatedSize < newSize) { 
@@ -93,10 +90,8 @@ int intArrayListRemove(IntArrayList* intArrayList, size_t i) {
     size_t newSize = intArrayList->size - 1;
     
     // ensure index is within bounds
-    if (i >= intArrayList->size) {
-        fprintf(stderr, "ERROR: IntArrayList Out of Bounds Error\n");
-        exit(EXIT_FAILURE);
-    }
+    if (i >= intArrayList->size)
+        __intArrayListOutOfBoundsError();
 
     // if i == newSize, we can just skip to modifying the size. 
     // otherwise, we need to shift elems after i leftward
@@ -123,4 +118,9 @@ void __intArrayListAllocateSpace(IntArrayList* intArrayList, size_t newSize) {
     int* newContents = realloc(intArrayList->contents, newSize * intArrayList->__elementSize);
     intArrayList->contents = newContents;
     intArrayList->__allocatedSize = newSize;
+}
+
+void __intArrayListOutOfBoundsError() {
+    fprintf(stderr, "ERROR: IntArrayList Out of Bounds Error\n");
+    exit(EXIT_FAILURE);
 }

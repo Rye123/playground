@@ -31,10 +31,8 @@ IntLinkedList intLinkedListFromArray(int* array, size_t arraySize);
  */
 int intLinkedListGet(IntLinkedList* intLinkedList, size_t i) {
     // check if i is within bounds
-    if (i >= intLinkedList->size) {
-        fprintf(stderr, "ERROR: IntLinkedList Out of Bounds Error\n");
-        exit(EXIT_FAILURE);
-    }
+    if (i >= intLinkedList->size)
+        __intLinkedListOutOfBoundsError();
 
     // iterate from start
     IntLinkedListNode* node = intLinkedList->head;
@@ -54,10 +52,8 @@ int intLinkedListGet(IntLinkedList* intLinkedList, size_t i) {
 void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int val) {
     size_t newSize = intLinkedList->size + 1;
     // check if i is within bounds
-    if (i >= newSize) {
-        fprintf(stderr, "ERROR: IntLinkedList Out of Bounds Error\n");
-        exit(EXIT_FAILURE);
-    }
+    if (i >= newSize)
+        __intLinkedListOutOfBoundsError();
 
     IntLinkedListNode* node = malloc(sizeof(IntLinkedListNode)); // allocate space for the next node
     node->value = val;
@@ -96,7 +92,11 @@ void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int val) {
  * @param i 
  * @return int 
  */
-int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i);
+int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i) {
+    // check if i is within bounds
+    if (i >= intLinkedList->size)
+        __intLinkedListOutOfBoundsError();
+}
 
 /**
  * @brief Frees the memory allocated for intLinkedList
@@ -111,4 +111,9 @@ void intLinkedListFree(IntLinkedList* intLinkedList) {
         free(node);
         node = next;
     }
+}
+
+void __intLinkedListOutOfBoundsError() {
+    fprintf(stderr, "ERROR: IntLinkedList Out of Bounds Error\n");
+    exit(EXIT_FAILURE);
 }

@@ -15,3 +15,5 @@ void intArrayListInsert(IntArrayList* intArrayList, size_t i, int value);
 int intArrayListRemove(IntArrayList* intArrayList, size_t i);
 void intArrayListFree(IntArrayList* intArrayList);
 void __intArrayListAllocateSpace(IntArrayList* intArrayList, size_t newSize);
+
+void __intArrayListOutOfBoundsError();

@@ -22,3 +22,5 @@ int intLinkedListGet(IntLinkedList* intLinkedList, size_t i);
 int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i);
 void intLinkedListFree(IntLinkedList* intLinkedList);
 void __intLinkedListAllocateSpace(IntLinkedList* intLinkedList, size_t newSize);
+
+void __intLinkedListOutOfBoundsError();

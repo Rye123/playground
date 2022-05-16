@@ -1,6 +1,10 @@
 #include "LinkedList.h"
 
-
+/**
+ * @brief Returns an empty IntLinkedList.
+ * 
+ * @return IntLinkedList 
+ */
 IntLinkedList intLinkedListNew() {
     IntLinkedList intLinkedList;
     intLinkedList.head = NULL;
@@ -8,8 +12,23 @@ IntLinkedList intLinkedListNew() {
     intLinkedList.size = 0;
     return intLinkedList;
 }
+
+/**
+ * @brief Converts a fixed-size integer array into an IntLinkedList
+ * 
+ * @param A fixed size integer array
+ * @param arraySize Size of integer array
+ * @return IntLinkedList 
+ */
 IntLinkedList intLinkedListFromArray(int* array, size_t arraySize);
 
+/**
+ * @brief Returns the integer value stored at intLinkedList[i]. If it doesn't exist, throws an error.
+ * 
+ * @param intLinkedList 
+ * @param i 
+ * @return int 
+ */
 int intLinkedListGet(IntLinkedList* intLinkedList, size_t i) {
     // check if i is within bounds
     if (i >= intLinkedList->size) {
@@ -25,6 +44,13 @@ int intLinkedListGet(IntLinkedList* intLinkedList, size_t i) {
     return node->value;
 }
 
+/**
+ * @brief Inserts an integer value at index i in intLinkedList.
+ * 
+ * @param intLinkedList 
+ * @param i 
+ * @param val 
+ */
 void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int val) {
     size_t newSize = intLinkedList->size + 1;
     // check if i is within bounds
@@ -62,7 +88,21 @@ void intLinkedListInsert(IntLinkedList* intLinkedList, size_t i, int val) {
     
     intLinkedList->size = newSize;
 }
+
+/**
+ * @brief Removes the index at i from intLinkedList, and returns the stored value. Modifies the size.
+ * 
+ * @param intLinkedList 
+ * @param i 
+ * @return int 
+ */
 int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i);
+
+/**
+ * @brief Frees the memory allocated for intLinkedList
+ * 
+ * @param intLinkedList 
+ */
 void intLinkedListFree(IntLinkedList* intLinkedList) {
     // iterate through linkedlist, freeing data from the head onwards
     IntLinkedListNode* node = intLinkedList->head;
@@ -72,4 +112,3 @@ void intLinkedListFree(IntLinkedList* intLinkedList) {
         node = next;
     }
 }
-void __intLinkedListAllocateSpace(IntLinkedList* intLinkedList, size_t newSize);

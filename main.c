@@ -118,6 +118,26 @@ void LinkedListTest() {
 
     // printf("Testing erroneous index.\n");
     // intLinkedListInsert(&lnkLs, lnkLs.size+1, 1);
+
+    int removed = intLinkedListRemove(&lnkLs, 0);
+    printf("Removed from index 0: %d. ", removed);
+    reportLinkedListData(&lnkLs);
+
+    removed = intLinkedListRemove(&lnkLs, lnkLs.size-1);
+    printf("Removed from end: %d. ", removed);
+    reportLinkedListData(&lnkLs);
+
+    removed = intLinkedListRemove(&lnkLs, 1);
+    printf("Removed from index 1: %d. ", removed);
+    reportLinkedListData(&lnkLs);
+
+    removed = intLinkedListRemove(&lnkLs, 0);
+    printf("Removed from index 0: %d. ", removed);
+    reportLinkedListData(&lnkLs);
+
+    // removed = intLinkedListRemove(&lnkLs, 1);
+    // printf("SHOULD GIVE ERROR\n");
+    // reportLinkedListData(&lnkLs);
     
     intLinkedListFree(&lnkLs);
 

@@ -96,6 +96,27 @@ int intLinkedListRemove(IntLinkedList* intLinkedList, size_t i) {
     // check if i is within bounds
     if (i >= intLinkedList->size)
         __intLinkedListOutOfBoundsError();
+    
+    IntLinkedListNode* prev = intLinkedList->head;
+    IntLinkedListNode* node = intLinkedList->head;
+    
+    if (i == 0) {// if it's head, update head to point to next one, then free
+        intLinkedList->head = node->next;
+    } else { // otherwise, iterate to previous node, update.
+        for (int j = 0; j < i-1; j++) {
+            prev = prev->next;
+        }
+        node = prev->next;
+        prev->next = node->next;
+        if (node->next == NULL) {
+            intLinkedList->tail = node;
+        }
+    }
+
+    int retValue = node->value;
+    free(node);
+    intLinkedList->size--;
+    return retValue;
 }
 
 /**

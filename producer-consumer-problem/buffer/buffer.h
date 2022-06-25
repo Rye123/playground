@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h> // for printf
 #include <semaphore.h> // for semaphores
+#include <pthread.h> // for mutex
 
 typedef int buffer_item;
 #define BUFFER_SIZE 5

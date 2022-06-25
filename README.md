@@ -1,1 +1,1 @@
-This is an attempt at reproducing several data structures in C, in an effort to learn C.
+This is a general repository for small projects in C.

@@ -14,7 +14,7 @@ int insert_item(buffer_item item)
 }
 
 /**
- * @brief Removes an item from the buffer
+ * @brief Removes an item from the buffer, placing it in item
  * 
  * @param item buffer_item
  * @return int 0 if successful, -1 otherwise

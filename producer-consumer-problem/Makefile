@@ -11,7 +11,7 @@ prog_main: ./main.c
 	$(CC) -c ./main.c -o ./obj/main.o
 
 executable:
-	$(CC) ./obj/* -o main
+	$(CC) ./obj/* -o main -lpthread
 
 
 clean:

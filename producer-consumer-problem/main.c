@@ -38,6 +38,15 @@ void *consumer(void *param)
 int main()
 {
     // Main function to test functionality of sequential execution.
+    // Test consumption of nonexistent items
+    pthread_t consumer_single_nonexist;
+    pthread_create(&consumer_single_nonexist, NULL, consumer, NULL);
+    printf("Main: Consumer initialised.\n");
+    sleep(3);
+    pthread_cancel(consumer_single_nonexist);
+    print_buffer_state();
+
+    // Test consumption of produced items
     pthread_t producer_single;
     pthread_create(&producer_single, NULL, producer, NULL);
     printf("Main: Producer initialised.\n");

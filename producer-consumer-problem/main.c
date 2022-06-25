@@ -35,7 +35,20 @@ void *consumer(void *param)
     }
 }
 
-int main(int argc, char** argv)
+int main()
+{
+    // Main function to test functionality of sequential execution.
+    pthread_t producer_single;
+    pthread_create(&producer_single, NULL, producer, NULL);
+
+    sleep(10);
+    pthread_cancel(producer_single);
+    print_buffer_state();
+    return EXIT_SUCCESS;
+}
+
+
+int main_threading(int argc, char** argv)
 {
     /* 1. Get command line arguments:
         - argv[1]: How long to sleep before terminating main

@@ -35,35 +35,7 @@ void *consumer(void *param)
     }
 }
 
-int main()
-{
-    // Main function to test functionality of sequential execution.
-    // Test consumption of nonexistent items
-    pthread_t consumer_single_nonexist;
-    pthread_create(&consumer_single_nonexist, NULL, consumer, NULL);
-    printf("Main: Consumer initialised.\n");
-    sleep(3);
-    pthread_cancel(consumer_single_nonexist);
-    print_buffer_state();
-
-    // Test consumption of produced items
-    pthread_t producer_single;
-    pthread_create(&producer_single, NULL, producer, NULL);
-    printf("Main: Producer initialised.\n");
-    sleep(10);
-    pthread_cancel(producer_single);
-    print_buffer_state();
-    pthread_t consumer_single;
-    pthread_create(&consumer_single, NULL, consumer, NULL);
-    printf("Main: Consumer initialised.\n");
-    sleep(10);
-    pthread_cancel(consumer_single);
-    print_buffer_state();
-    return EXIT_SUCCESS;
-}
-
-
-int main_threading(int argc, char** argv)
+int main(int argc, char** argv)
 {
     /* 1. Get command line arguments:
         - argv[1]: How long to sleep before terminating main
@@ -111,6 +83,9 @@ int main_threading(int argc, char** argv)
         pthread_cancel(consumers[i]);
         printf("Main: Killed consumer %d.\n", i);
     }
+
+    printf("Current Buffer State: ");
+    print_buffer_state();
 
     return EXIT_SUCCESS;
 }

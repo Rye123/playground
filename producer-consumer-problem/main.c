@@ -10,6 +10,7 @@ void *producer(void *param)
 
         // generate random number
         item = rand();
+        printf("Producer: Trying to produce %d\n", item);
         if (insert_item(item) == 0) {
             printf("Producer: Produced item %d\n", item);
         } else {
@@ -52,7 +53,7 @@ int main(int argc, char** argv)
 
     printf("Main: Initialising program with %d producers, %d consumers, to end in %d seconds.\n\n", producer_count, consumer_count, termination_delay);
 
-    /* 2. Initialise buffer */
+    /* 2. Initialisation */
 
     /* 3. Create producer thread(s) */
     pthread_t *producers = malloc(BUFFER_ITEM_SIZE * producer_count);
@@ -71,6 +72,7 @@ int main(int argc, char** argv)
     }
 
     /* 5. Sleep */
+    buffer_init();
     sleep(termination_delay);
     /* 6. Exit */
     // clean up threads

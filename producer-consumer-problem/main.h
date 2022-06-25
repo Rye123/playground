@@ -5,6 +5,6 @@
 
 #include "./buffer/buffer.h"
 
-#define THREADSLEEP_MAX 5
+#define THREADSLEEP_MAX 2
 #define TRUE 1
 #define FALSE 0

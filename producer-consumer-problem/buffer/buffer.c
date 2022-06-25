@@ -29,7 +29,17 @@ int insert_item(buffer_item item)
  */
 int remove_item(buffer_item *item)
 {
-    return -1;
+    // CRITICAL SECTION START
+    buffer_item readVal = buffer[read_index];
+    if (!readVal || readVal == -1) { // tried to read invalid value
+        // CRITICAL SECTION END
+        return -1;
+    }
+    *item = readVal;
+    buffer[read_index] = -1;
+    read_index = (read_index + 1) % BUFFER_SIZE;
+    // CRITICAL SECTION END
+    return 0;
 }
 
 /**
@@ -41,7 +51,10 @@ void print_buffer_state()
     for (int i = 0; i < BUFFER_SIZE; i++) {
         if (i != 0)
             printf(", ");
-        printf("%d", buffer[i]);
+        if(!buffer[i] || buffer[i] == -1)
+            printf("-");
+        else
+            printf("%d", buffer[i]);
     }
     printf("]\n");
 }

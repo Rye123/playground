@@ -71,7 +71,7 @@ int main(int argc, char** argv)
     }
 
     /* 5. Sleep */
-    sleep(10);
+    sleep(termination_delay);
     /* 6. Exit */
     // clean up threads
     printf("\n\nMain: Killing Threads now.\n");

@@ -40,9 +40,15 @@ int main()
     // Main function to test functionality of sequential execution.
     pthread_t producer_single;
     pthread_create(&producer_single, NULL, producer, NULL);
-
+    printf("Main: Producer initialised.\n");
     sleep(10);
     pthread_cancel(producer_single);
+    print_buffer_state();
+    pthread_t consumer_single;
+    pthread_create(&consumer_single, NULL, consumer, NULL);
+    printf("Main: Consumer initialised.\n");
+    sleep(10);
+    pthread_cancel(consumer_single);
     print_buffer_state();
     return EXIT_SUCCESS;
 }

@@ -13,12 +13,12 @@ void buffer_init()
 {
     pthread_mutex_init(&read_mutex,  NULL);
     pthread_mutex_init(&write_mutex, NULL);
-    sem_init(&read_sem,  0, 0);
-    sem_init(&write_sem, 0, 0);
-    sem_post(&write_sem); // start writing
+    //sem_post(&write_sem); // start writing
     for (int i = 0; i < BUFFER_SIZE; i++) {
         buffer[i] = -1;
     }
+    sem_init(&read_sem,  0, 0);
+    sem_init(&write_sem, 0, BUFFER_SIZE);
 }
 
 /**

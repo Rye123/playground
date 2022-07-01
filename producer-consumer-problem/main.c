@@ -26,6 +26,7 @@ void *consumer(void *param)
     while(TRUE) {
         // sleep for random period of time
         sleep(rand() % THREADSLEEP_MAX);
+        printf("Consumer: Trying to consume the next item.\n");
 
         // generate random number
         if (remove_item(&item) == 0) {

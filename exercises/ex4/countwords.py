@@ -21,6 +21,9 @@ number of times that they are used.
 
 import re
 from typing import Dict, Any
+from pathlib import Path
+from concurrent.futures import ProcessPoolExecutor
+from functools import reduce
 
 def count_words(filename: str) -> Dict[str, int]:
     """
@@ -77,3 +80,30 @@ def reduce_dicts(dict1: Dict[Any, Any], dict2: Dict[Any, Any]) -> Dict[Any, Any]
             combined[key] = dict2[key]
 
     return combined
+
+if __name__ == "__main__":
+    from sys import argv, exit
+    if len(argv) != 2:
+        print("Input directory.")
+        exit(1)
+    dirpath = Path(argv[1])
+    all_words = []
+
+    with ProcessPoolExecutor() as pool:
+        # Get words for each filename
+        all_words = pool.map(count_words, dirpath.iterdir())
+
+    words = reduce(reduce_dicts, all_words)
+    
+    # map words to a set of tuples
+    word_tups = map(lambda tup: tup, words.items())
+    
+    # filter out words appearing less than 2000 times
+    word_tups_filtered = filter(lambda tup : tup[1] > 2000, word_tups)
+
+    # sort in alphabetical order
+    sorted_word_tups = sorted(word_tups_filtered, key=lambda word_tup: word_tup[0])
+    
+    # print nicely
+    for word_tup in sorted_word_tups:
+        print(f"{word_tup[0]}: {word_tup[1]}")

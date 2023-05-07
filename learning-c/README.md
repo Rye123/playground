@@ -1,0 +1,1 @@
+This is a general repository for small projects in C.

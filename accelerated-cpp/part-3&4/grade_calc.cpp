@@ -67,14 +67,14 @@ double getMean(vector<double> values) {
 /**
  * Returns the final grade, where `gradesHomework` is the chosen average for the homework.
 */
-double getFinalGrade(double gradesMidterm, double gradesFinal, double gradesHomeworkAvg) {
+double getFinalGrade(const double gradesMidterm, const double gradesFinal, const double gradesHomeworkAvg) {
     return 0.2 * gradesMidterm + 0.4 * gradesFinal + 0.4 * gradesHomeworkAvg;
 }
 
 /**
  * Returns the final grade, where `homeworkGrades` is a reference to a vector of grades.
 */
-double getFinalGrade(double gradesMidterm, double gradesFinal, vector<double>& homeworkGrades) {
+double getFinalGrade(const double gradesMidterm, const double gradesFinal, const vector<double>& homeworkGrades) {
     double average = getMedian(homeworkGrades);
     return getFinalGrade(gradesMidterm, gradesFinal, average);
 }

@@ -10,8 +10,18 @@ using std::endl;            using std::string;
 using std::setprecision;    using std::streamsize;
 using std::vector;          using std::sort;
 using std::domain_error;    using std::istream;
+using std::max;
 
 typedef vector<double>::size_type vec_sz;
+
+/**
+ * Represents a student.
+*/
+struct StudentInfo {
+    string name;
+    double gradesMidterm, gradesFinal;
+    vector<double> gradesHomework;
+};
 
 /**
  * Reads doubles into a vector `values` until EOF or invalid character.
@@ -35,6 +45,19 @@ istream& readDoublesIntoVector(istream& in, vector<double>& values, bool clear) 
 */
 istream& readDoublesIntoVector(istream& in, vector<double>& values) {
     return readDoublesIntoVector(in, values, false);
+}
+
+/**
+ * Processes a line from an input stream into StudentInfo `sinfo`.
+*/
+istream& readStudentInfo(istream& is, StudentInfo& sinfo) {
+    // Read first three parts
+    is >> sinfo.name >> sinfo.gradesMidterm >> sinfo.gradesFinal;
+
+    // Read homework grades
+    readDoublesIntoVector(is, sinfo.gradesHomework);
+
+    return is;
 }
 
 /**
@@ -79,51 +102,48 @@ double getFinalGrade(const double gradesMidterm, const double gradesFinal, const
     return getFinalGrade(gradesMidterm, gradesFinal, average);
 }
 
+/**
+ * Returns the final grades, based off a `StudentInfo` object.
+*/
+double getFinalGrade(const StudentInfo& sinfo) {
+    return getFinalGrade(sinfo.gradesMidterm, sinfo.gradesFinal, sinfo.gradesHomework);
+}
+
+bool compareNames(const StudentInfo& s1, const StudentInfo& s2) {
+    return s1.name < s2.name;
+}
 
 int main()
 {
-    streamsize defaultPrecision = cout.precision();
-    string studentName = "";
-    double gradesMidterm = 0.0;
-    double gradesFinal = 0.0;
-    vector<double> gradesHomework;
+    vector<StudentInfo> students;
+    string::size_type maxlen = 0;
 
-    // Request student name
-    cout << "Enter first name: ";
-    cin >> studentName;
-
-    cout << "Hello, " << studentName << endl;
-
-    // Request grade data
-    cout << "Enter midterm and final grades: ";
-    cin >> gradesMidterm >> gradesFinal;
-
-    // Request homework grades
-    cout << "Enter homework grades: ";
-    readDoublesIntoVector(cin, gradesHomework, false);
-    if (gradesHomework.size() == 0) {
-        cout << "Please enter your grades." << endl;
-        return 1;
+    // Process records, finding length of longest name
+    StudentInfo record;
+    while (readStudentInfo(cin, record)) {
+        maxlen = max(maxlen, record.name.size());
+        students.push_back(record);
     }
 
-    // Evaluate median and mean of homework grades
-    vec_sz homeworkCount = gradesHomework.size();
-    double gradesHomeworkMedian = getMedian(gradesHomework);
-    double gradesHomeworkMean = getMean(gradesHomework);
-    cout << "Homework Report: \n\tMedian Grade: "
-         << setprecision(3)
-         << gradesHomeworkMedian
-         << "\n\tMean Grade: "
-         << gradesHomeworkMean
-         << setprecision(defaultPrecision)
-         << endl;
-    
-    // Output result
-    cout << "Final Grade: " 
-         << setprecision(3)
-         << getFinalGrade(gradesMidterm, gradesFinal, gradesHomework)
-         << setprecision(defaultPrecision)
-         << endl;
+    // Sort by names
+    sort(students.begin(), students.end(), compareNames);
+
+    // Report results
+    for (StudentInfo record : students) {
+        // Write padded student name
+        cout << record.name << string(maxlen + 1 - record.name.size(), ' ');
+
+        // Compute and write result.
+        try {
+            double grade = getFinalGrade(record);
+            streamsize prec = cout.precision();
+            cout << setprecision(3) << grade << setprecision(prec);
+        } catch (domain_error e) {
+            cout << e.what();
+        }
+
+        cout << endl;
+    }
 
     return 0;
 }

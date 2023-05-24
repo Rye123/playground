@@ -2,6 +2,7 @@
 #define GUARD_grade_h
 
 #include <vector>
+#include <list>
 #include "studentInfo.h"
 
 /**
@@ -18,5 +19,10 @@ double getFinalGrade(const double gradesMidterm, const double gradesFinal, const
  * Returns the final grades, based off a `StudentInfo` object.
 */
 double getFinalGrade(const StudentInfo& sinfo);
+
+/**
+ * Extracts failed students from a given list of students, returning the failed students as a new list.
+*/
+std::list<StudentInfo> extractFails(std::list<StudentInfo>& students);
 
 #endif

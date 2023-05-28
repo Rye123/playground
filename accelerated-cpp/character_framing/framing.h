@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 
-std::string::size_type getMaxLen(std::vector<std::string>);
-std::string getFrame(std::vector<std::string>);
+std::string::size_type getMaxLen(const std::vector<std::string>&);
+std::vector<std::string> getFrame(const std::vector<std::string>&);
+std::string getFrameString(const std::vector<std::string>&);
 
 #endif

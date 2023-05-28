@@ -15,7 +15,8 @@ int main()
 	while (getline(cin, s)) {
 		lines.push_back(s);	
 	}
-	s = getFrame(lines);
+	vector<string> framed = getFrame(lines);
+	s = getFrameString(framed);
 	cout << s << endl;
 	return 0;
 }

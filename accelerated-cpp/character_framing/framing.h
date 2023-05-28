@@ -9,4 +9,6 @@ std::string::size_type getMaxLen(const std::vector<std::string>&);
 std::vector<std::string> getFrame(const std::vector<std::string>&);
 std::string getFrameString(const std::vector<std::string>&);
 
+std::vector<std::string> vcat(const std::vector<std::string>&, const std::vector<std::string>&);
+std::vector<std::string> hcat(const std::vector<std::string>&, const std::vector<std::string>&);
 #endif

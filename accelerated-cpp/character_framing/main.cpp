@@ -25,25 +25,34 @@ istream& readLines(istream& is, vector<string>& lines)
 	return is;
 }
 
-istream& readFrame(istream& is, vector<string>& frame)
-{
-	// Ensure no failure state
-	if (!is)
-		return is;
-
+vector<vector<string>> getFrames(vector<string> rawLines) {
+	string DIVIDER = "!===!===!"; // unique string to divide two sets of lines that should be framed separately.
+	vector<vector<string>> ret;
 	vector<string> lines;
-	readLines(is, lines);
-	frame = getFrame(lines);
-	is.clear();
-	return is;
+	for (string line : rawLines) {
+		if (line == DIVIDER) {
+			if (lines.size() > 0) {
+				ret.push_back(getFrame(lines));
+				lines.clear();
+			}
+		} else {
+			lines.push_back(line);
+		}
+	}
+	if (lines.size() > 0)
+		ret.push_back(getFrame(lines));
+	return ret;
 }
 
 int main()
 {
-	vector<string> framed;
-	readFrame(cin, framed);
-	string s = getFrameString(framed);
-	cout << s << endl;
-
+	vector<string> raw;
+	readLines(cin, raw);
+	vector<vector<string>> frames = getFrames(raw);
+	
+	for (vector<string> frame : frames) {
+		cout << "FRAME: " << endl;
+		cout << getFrameString(frame) << endl;
+	}
 	return 0;
 }

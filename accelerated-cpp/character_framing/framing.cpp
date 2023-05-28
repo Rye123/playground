@@ -65,7 +65,7 @@ vector<string> vcat(const vector<string>& top, const vector<string>& btm)
 vector<string> hcat(const vector<string>& left, const vector<string>& right)
 {
 	vector<string> ret;
-	int leftWidth = getMaxLen(ret);
+	int leftWidth = getMaxLen(left);
 	vector<string>::size_type totalLineCount = max(left.size(), right.size());
 	for (vector<string>::size_type i = 0; i < totalLineCount; i++) {
 		string newLine = "";
@@ -78,6 +78,7 @@ vector<string> hcat(const vector<string>& left, const vector<string>& right)
 		// Append nothing if no corresponding line from the right
 		if (i < right.size())
 			newLine += right[i];
+		ret.push_back(newLine);
 	}
 	return ret;
 }

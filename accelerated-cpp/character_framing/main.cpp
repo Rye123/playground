@@ -54,5 +54,34 @@ int main()
 		cout << "FRAME: " << endl;
 		cout << getFrameString(frame) << endl;
 	}
+
+	// Concatenate each frame such that two frames fit horizontally.
+	cout << "\n\nCONCATENATION: " << endl;
+	// 1. Set up horizontal framing
+	vector<vector<string>> hcatFrames;
+	vector<vector<string>>::const_iterator frameIter = frames.begin();
+	while (frameIter != frames.end()) {
+		// Concat this frame and the next
+		vector<string> left = (*frameIter);
+		frameIter++;
+		if (frameIter == frames.end()) {
+			hcatFrames.push_back(left);
+			break;
+		}
+		vector<string> right = (*frameIter);
+		frameIter++;
+		hcatFrames.push_back(hcat(left, right));
+	}
+	// 2. Set up vertical framing
+	vector<vector<string>>::const_iterator hcatFrameIter = hcatFrames.begin();
+	vector<string> concatFrames = (*hcatFrameIter);
+	hcatFrameIter++;
+	while (hcatFrameIter != hcatFrames.end()) {
+		concatFrames = vcat(concatFrames, (*hcatFrameIter));
+		hcatFrameIter++;
+	}
+	// Report
+	cout << getFrameString(concatFrames) << endl;
+
 	return 0;
 }

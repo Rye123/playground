@@ -53,14 +53,14 @@ will be split into:
 
 Further, `main` will concatenate them such that we have two frames every row, in the following way:
 ```
-********************************************************************************
-*       the quick brown        ** Peter Piper picks a peck of pickled peppers. *
-* fox jumps over the lazy dog. *************************************************
+******************************** ************************************************
+*       the quick brown        * * Peter Piper picks a peck of pickled peppers. *
+* fox jumps over the lazy dog. * ************************************************
 ********************************
-***************************************
-* She sells sea shells ** Lorem ipsum *
-*  by the sea shore.   **    dolor    *
-*************************     sit     *
-                        *    amet.    *
-                        ***************
+************************ ***************
+* She sells sea shells * * Lorem ipsum *
+*  by the sea shore.   * *    dolor    *
+************************ *     sit     *
+                         *    amet.    *
+                         ***************
 ```

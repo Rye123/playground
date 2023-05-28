@@ -77,7 +77,7 @@ vector<string> hcat(const vector<string>& left, const vector<string>& right)
 		
 		// Append nothing if no corresponding line from the right
 		if (i < right.size())
-			newLine += right[i];
+			newLine += " " + right[i];
 		ret.push_back(newLine);
 	}
 	return ret;

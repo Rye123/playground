@@ -1,3 +1,10 @@
+/**
+ * main:
+ * Program that scans a list of words in a text file, and
+ * identifies the logest word with neither ascenders or
+ * descenders.
+*/
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,6 +14,8 @@
 using std::cout; using std::cin; using std::endl;
 using std::string; using std::getline;
 using std::vector;
+
+bool DEBUG = true; // set to true to display the running longest word
 
 int main()
 {
@@ -18,11 +27,18 @@ int main()
 	}
 
 	// Process words
+	string longestWord = "";
+	int longestLength = 0;
 	for (string word : words) {
-		if (containsAscendersOrDescenders(word))
-			cout << word << " - TRUE" << endl;
-		else
-			cout << word << " - FALSE" << endl;
+		if (!containsAscendersOrDescenders(word)) {
+			if (word.size() <= longestLength)
+				continue;
+			longestWord = word;
+			longestLength = word.size();
+			if (DEBUG)
+				cout << "Current longest: " << word << " (Length " << longestLength << ")" << endl;
+		}
 	}
+	cout << "Longest word: " << longestWord << endl;
 	return 0;
 }

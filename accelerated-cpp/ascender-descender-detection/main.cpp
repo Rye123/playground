@@ -28,13 +28,14 @@ int main()
 
 	// Process words
 	string longestWord = "";
-	int longestLength = 0;
+	string::size_type longestLength = 0;
 	for (string word : words) {
+		string::size_type len = word.size();
+		if (len <= longestLength)
+			continue;
 		if (!containsAscendersOrDescenders(word)) {
-			if (word.size() <= longestLength)
-				continue;
 			longestWord = word;
-			longestLength = word.size();
+			longestLength = len;
 			if (DEBUG)
 				cout << "Current longest: " << word << " (Length " << longestLength << ")" << endl;
 		}

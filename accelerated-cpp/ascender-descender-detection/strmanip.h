@@ -7,7 +7,7 @@
 #include <vector>
 
 /**
- * Splits a given string by the whitespaces.
+ * Splits a given string by the whitespaces. Only alphanumeric characters will be considered part of the word.
 */
 std::vector<std::string> split(const std::string&);
 

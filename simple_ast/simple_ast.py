@@ -2,7 +2,7 @@ from enum import IntEnum
 from typing import List, Any, Union
 from dataclasses import dataclass
 
-DEBUG = True
+DEBUG = False
 WHITESPACE = [" ", "\t"]
 
 def dbgprint(msg: str):
@@ -92,7 +92,6 @@ class Symbol:
         self.value = value
 
     def __repr__(self) -> str:
-        print("ree")
         return self.type.name
     
 class ParseTreeNode:
@@ -112,19 +111,61 @@ class ParseTreeNode:
         return self.children[-1]
 
     def evaluate(self) -> str:
-        if self.type == SymbolType.TERMINAL:
-            return self.symbol.value.value
-        else:
-            ret_str = ""
-            if len(self.children) == 0:
-                return ""
-            
-            for child in self.children:
-                ret_str += child.evaluate() + " "
-            
-            return f"({ret_str.strip()})"
+        dbgprint(f"Evaluating: {self}, {self.type.name}")
+        match self.type:
+            case SymbolType.TERMINAL:
+                return self.symbol.value
+            case SymbolType.UNARY:
+                # Evaluate the unary value and return
+                evaluated:List[Token] = []
+                for child in self.children:
+                    evaluated.append(child.evaluate())
                 
+                if evaluated[0].type == TokenType.NUMBER:
+                    return evaluated[0].literal
+                else:
+                    if evaluated[0].type == TokenType.PLUS:
+                        return evaluated[0].literal
+                    elif evaluated[0].type == TokenType.MINUS:
+                        return -evaluated[0].literal
+            case SymbolType.TERM_R:
+                evaluated:List[Token] = []
+                for child in self.children:
+                    evaluated.append(child.evaluate())
+                    
+                return evaluated
+            case SymbolType.TERM:
+                evaluated:List[Token] = []
+                for child in self.children:
+                    evaluated.append(child.evaluate())
+                value = evaluated[0]
+                if len(evaluated[1]) == 0:
+                    return value
                 
+                if evaluated[1][0].type == TokenType.STAR:
+                    value *= evaluated[1][1]
+                elif evaluated[1][0].type == TokenType.SLASH:
+                    value /= evaluated[1][1]
+                return value
+            case SymbolType.EXPRESSION_R:
+                evaluated:List[Token] = []
+                for child in self.children:
+                    evaluated.append(child.evaluate())
+                    
+                return evaluated
+            case SymbolType.EXPRESSION:
+                evaluated:List[Token] = []
+                for child in self.children:
+                    evaluated.append(child.evaluate())
+                value = evaluated[0]
+                if len(evaluated[1]) == 0:
+                    return value
+                
+                if evaluated[1][0].type == TokenType.PLUS:
+                    value += evaluated[1][1]
+                elif evaluated[1][0].type == TokenType.MINUS:
+                    value -= evaluated[1][1]
+                return value
 
     def __repr__(self) -> str:
         if self.type == SymbolType.TERMINAL:
@@ -169,15 +210,11 @@ class Parser:
         """ Returns the next unconsumed token. """
         return self.tokens[self.ptr+1]
 
-    def parse(self) -> ParseTree:
+    def parse(self):
         while True:
             token = self.tokens[self.ptr]
             if token.type == TokenType.EOF:
-                return self.tree
-
-            # Step 1: Expansion of Nonterminal
-            # We select a production rule for the given token
-            # Note: For each parse_ procedure, the parent constructs the tree_ptr and the procedure fills up the children.
+                return
             self.parse_expression(self.tree.root)
 
     def parse_number(self, node: ParseTreeNode):
@@ -264,19 +301,25 @@ class Parser:
         expr_r_node = node.add_child_u(SymbolType.EXPRESSION_R)
         self.parse_expression_r(expr_r_node)
 
+def process(source: str) -> float:
+    tokens = tokenise(source)
+    if DEBUG:
+        print(f"Tokens: {tokens}")
+
+    parser = Parser(tokens)
+    parser.parse()
+
+    if DEBUG:
+        print(f"Parsed Tree: {parser.tree}")
+
+    return parser.tree.root.evaluate()
+    
 def main():
     try:
         while True:
             try:
                 source = input("> ")
-                tokens = tokenise(source)
-                print(tokens)
-
-                parser = Parser(tokens)
-                print(parser.parse())
-
-                string = parser.tree.root.evaluate()
-                print(string)
+                print(process(source))
 
             except SyntaxError as e:
                 print(e)

@@ -168,15 +168,18 @@ class ParseTreeNode:
                 return value
 
     def __repr__(self) -> str:
-        if self.type == SymbolType.TERMINAL:
-            if self.symbol.value is None:
-                return "None"
-            return self.symbol.value.type.name
+        # if self.type == SymbolType.TERMINAL:
+        #     if self.symbol.value is None:
+        #         return "None"
+        #     return self.symbol.value.type.name
 
-        if len(self.children) == 0:
-            return ""
+        # if len(self.children) == 0:
+        #     return ""
         
-        ret_child = ""
+        ret_child = f"{self.type.name}"
+        if self.type == SymbolType.TERMINAL:
+            terminal_type = "None" if self.symbol.value is None else self.symbol.value.type.name
+            ret_child += " " + terminal_type
         for child in self.children:
             ret_child += "NA" if child is None else child.__repr__()
             ret_child += " "

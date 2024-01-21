@@ -2,7 +2,7 @@ from enum import IntEnum
 from typing import List, Any, Union
 from dataclasses import dataclass
 
-DEBUG = False
+DEBUG = True
 WHITESPACE = [" ", "\t"]
 
 def dbgprint(msg: str):
@@ -182,7 +182,6 @@ class ParseTreeNode:
             ret_child += " "
 
         ret_child = ret_child.strip()
-        #return f"{self.symbol.type.name}({ret_child})"
         return f"({ret_child})"
 
 class ParseTree:

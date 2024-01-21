@@ -1,6 +1,6 @@
 # simple_ast
 
-A simple recursive descent parser in Python.
+A simple recursive descent parser in Python, to compute simple infix expressions like "1 + 2 * 3".
 
 **Grammar**:
 ```
@@ -15,4 +15,9 @@ E_R --> +/- E E_R | empty
 T   --> U T_R
 T_R --> *// T T_R | empty
 U   --> +/- U     | n
+```
+
+## Usage
+```bash
+python3 simple_ast.py
 ```

@@ -2,3 +2,6 @@
 
 # Ignore Emacs Backup files
 *~
+
+# Ignore Python caching
+__pycache__/

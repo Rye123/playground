@@ -1,8 +1,11 @@
+	section .data
+	err db 0xa, "ERROR", 0xa
+	err_len dd 7
+
 	section .bss
-	src_sz resb 4
-	mem resb 255		; Memory for brainfuck program
-	buf resb 255		; Buffer for input
-	src resb 255		; Buffer for source code
+	mem resb 256
+	buf resb 256		; Buffer for input
+	
 	
 	section .text
 	global _start
@@ -15,78 +18,257 @@ get_input:
 	mov eax, 3
 	mov ebx, 0 		; stdin
 	lea ecx, [buf]
-	mov edx, 255
+	mov edx, 254
 	int 0x80
+
+	mov byte [buf+255], 0
 	pop ebp
 	ret
 
-;;; parse_src: Parses only valid brainfuck characters from buffer into src, storing the length into src_sz
-parse_src:	
+	
+;;; get_next_index: Scans arg1 backward for arg2. Returns the relative index of arg2, or -1 in EAX
+;;;   Arguments: arg1=ptr to array, arg2=expected character
+get_next_index:
+	push ebp
+	mov ebp, esp
+	push ebx
+	push ecx
+	push edx
+	mov eax, -1 		; Return value
+	mov ebx, [ebp+8] 	; current address (arg1 + iterator)
+	xor ecx, ecx		; current character
+	xor edx, edx 		; expected character
+	mov dl, [ebp+0xc]
+
+get_next_index_loop:
+	mov cl, [ebx]
+
+	cmp cl, dl
+	je get_next_index_found
+	cmp cl, 0
+	je get_next_index_exit
+
+	add ebx, 1
+	jmp get_next_index_loop
+
+get_next_index_found:
+	;; Get relative index
+	mov eax, ebx
+	sub eax, [ebp+8]
+	
+get_next_index_exit:
+	pop edx
+	pop ecx
+	pop ebx
+	pop ebp
+	ret
+
+;;; get_prev_index: Scans arg1 backward for arg2. Returns the relative index of arg2, or -1 in EAX
+;;;   Arguments: arg1=ptr to array, arg2=expected character
+get_prev_index:
+	push ebp
+	mov ebp, esp
+	push ebx
+	push ecx
+	push edx
+	mov eax, -1 		; Return value
+	mov ebx, [ebp+8] 	; current address (arg1 + iterator)
+	xor ecx, ecx		; current character
+	xor edx, edx 		; expected character
+	mov dl, [ebp+0xc]
+
+get_prev_index_loop:
+	mov cl, [ebx]
+
+	cmp cl, dl
+	je get_prev_index_found
+	cmp cl, 0
+	je get_prev_index_exit
+
+	sub ebx, 1
+
+	;; ensure not less than zero
+	cmp ebx, -1
+	je get_prev_index_exit
+	jmp get_prev_index_loop
+
+get_prev_index_found:
+	;; Get relative index
+	mov eax, ebx
+	sub eax, [ebp+8]
+	
+get_prev_index_exit:
+	pop edx
+	pop ecx
+	pop ebx
+	pop ebp
+	ret
+
+interpret:
 	;; Prologue
 	push ebp
 	mov ebp, esp
-	
-	;; Initialise variables
-	xor edi, edi
-	xor ebx, ebx
+	sub esp, 0xc
 
-parse_src_process:	
-	;; Process input into src
+	;; Initialise vars
+	mov dword [ebp-4], 0x0 	; code ptr
+	mov dword [ebp-8], mem 	; memory ptr
+
+interpret_parse:
+	;; Get current character into EAX
+	mov dword edi, [ebp-4]
 	xor eax, eax
-	mov byte al, [buf+edi] 	; current character
+	mov byte al, [buf+edi]
 
-	;; If current character is a valid brainfuck character
+	;; If character is valid brainfuck character
 	cmp al, 0x3e		; '>'
-	je parse_src_process_save
+	je interpret_parse_ptr_mov_r
 	cmp al, 0x3c		; '<'
-	je parse_src_process_save
+	je interpret_parse_ptr_mov_l
 	cmp al, 0x2b		; '+'
-	je parse_src_process_save
+	je interpret_parse_mem_inc
 	cmp al, 0x2d		; '-'
-	je parse_src_process_save
+	je interpret_parse_mem_dec
 	cmp al, 0x2e		; '.'
-	je parse_src_process_save
+	je interpret_parse_mem_out
 	cmp al, 0x2c		; ','
-	je parse_src_process_save
+	je interpret_parse_mem_in
 	cmp al, 0x5b		; '['
-	je parse_src_process_save
+	je interpret_parse_jfez
 	cmp al, 0x5d		; ']'
-	je parse_src_process_save
-	cmp al, 0x00
-	je parse_src_exit
-	;; Else, loop
-	jmp parse_src_process_loop
+	je interpret_parse_jbnz
+	cmp al, 0x00		; '\0': EXIT
+	je interpret_exit
 
-parse_src_process_save:	
-	;; Save to src
-	mov byte [src+ebx], al 	; save to src
-	add ebx, 1
+interpret_parse_loop:
+	add dword [ebp-4], 1
+	jmp interpret_parse
 
-parse_src_process_loop:	
-	;; Increment i and loop
-	add edi, 1
-	jmp parse_src_process
+interpret_parse_ptr_mov_r:	; '>': Pointer Move Right
+	add dword [ebp-8], 1
+	jmp interpret_parse_loop
+interpret_parse_ptr_mov_l:	; '<': Pointer Move Left
+	sub dword [ebp-8], 1
+	jmp interpret_parse_loop
+interpret_parse_mem_inc:	; '+': Memory Increment at cell
+	mov edi, [ebp-8]
+	add dword [edi], 1
+	jmp interpret_parse_loop
+interpret_parse_mem_dec:	; '-': Memory Decrement at cell
+	mov edi, [ebp-8]
+	sub dword [edi], 1
+	jmp interpret_parse_loop
+interpret_parse_mem_out:	; '.': Output character at cell
+	;; write(unsigned int fd, const char *buf, size_t count)
+	mov eax, 4		; write
+	mov ebx, 1		; stdout
+	mov ecx, [ebp-8]	; arg1
+	mov edx, 1
+	int 0x80
 	
-parse_src_exit:
-	;; Set size of src
-	mov dword [src_sz], ebx
+	jmp interpret_parse_loop
+interpret_parse_mem_in:		; ',': Input character at cell
+	;; read(unsigned int fd, const char *buf, size_t count)
+	mov eax, 3		; read
+	mov ebx, 0		; stdin
+	mov ecx, [ebp-8]	; arg1
+	mov edx, 1
+	int 0x80
 	
-	;; Epilogue
+	jmp interpret_parse_loop
+interpret_parse_jfez:		; '[': Jump forward if cell == 0, to next ']'
+	mov edi, [ebp-8]
+
+	cmp dword [edi], 0
+	;; if mem[mem_ptr] != 0
+	jne interpret_parse_loop
+	;; else: jump to next ']'
+
+	;; get_next_index(buf + code_ptr, ']')
+	lea edi, buf
+	add edi, [ebp-4]
+	push 0x5d 		; ']'
+	push dword edi
+	call get_next_index
+	add esp, 0x8
+
+	;; check if cannot find next index
+	cmp dword eax, -1
+	je _error
+
+	add dword [ebp-4], eax
+	jmp interpret_parse_loop
+interpret_parse_jbnz:		; ']': Jump backward if cell != 0, to prev '['
+	mov edi, [ebp-8]
+
+	cmp dword [edi], 0
+	;; if mem[mem_ptr] == 0
+	je interpret_parse_loop
+	;; else: jump to next ']'
+	
+	;; get_prev_index(buf + code_ptr, '[')
+	lea edi, buf
+	add edi, [ebp-4]
+	push 0x5b 		; '['
+	push dword edi
+	call get_prev_index
+	add esp, 0x8
+
+	;; check if cannot find next index
+	cmp dword eax, -1
+	je _error
+
+	sub dword [ebp-4], eax
+	jmp interpret_parse_loop
+
+interpret_exit:
+	add esp, 0xc
 	pop ebp
 	ret
 
-;;; start
-_start:
-	call get_input
-	call parse_src
-
+_error:
 	;; write(unsigned int fd, const char *buf, size_t count)
 	mov eax, 4
-	mov ebx, 1		; stdout
-	lea ecx, [src]
-	mov dword edx, [src_sz]
+	mov ebx, 2		; stderr
+	lea ecx, [err]
+	mov dword edx, [err_len]
+	int 0x80
+	
+	mov eax, 1
+	xor ebx, ebx
+	mov ebx, 1
 	int 0x80
 
+;;; start
+_start:
+	;; Prologue
+	push ebp
+	mov ebp, esp
+	xor edi, edi
+
+init_mem:
+	mov dword [mem+edi], 0x00
+	inc edi
+	cmp edi, 254
+	jne init_mem
+
+interpret_code:	
+	;; Store source code from stdin into buf
+	call get_input
+	call interpret
+
+
+	;; Epilogue
+	pop ebp
+	
+	
+	;; write(unsigned int fd, const char *buf, size_t count)
+	;; mov eax, 4
+	;; mov ebx, 2		; stderr
+	;; mov ecx, mem
+	;; mov dword edx, 256
+	;; int 0x80
+	
 	;; Exit
 	mov eax, 1
 	xor ebx, ebx

@@ -1,83 +1,84 @@
 	section .bss
-	buf resb 255
-	src resb 255
 	src_sz resb 4
-	mem resb 100
-
+	mem resb 255		; Memory for brainfuck program
+	buf resb 255		; Buffer for input
+	src resb 255		; Buffer for source code
+	
 	section .text
 	global _start
 
+;;; get_input: Takes input from stdin, storing in buf
 get_input:
-	;; Prologue
+	;;    read(unsigned int fd, char *buf, size_t count)
 	push ebp
 	mov ebp, esp
-	sub esp, 0x4 		; i
-
-	;; 1. Read input from stdin
-	;;    read(unsigned int fd, char *buf, size_t count)
 	mov eax, 3
 	mov ebx, 0 		; stdin
 	lea ecx, [buf]
 	mov edx, 255
 	int 0x80
+	pop ebp
+	ret
 
-	;; i = 0
-	mov dword [ebp-4], 0x0
-	mov dword [src_sz], 0x0
+;;; parse_src: Parses only valid brainfuck characters from buffer into src, storing the length into src_sz
+parse_src:	
+	;; Prologue
+	push ebp
+	mov ebp, esp
+	
+	;; Initialise variables
+	xor edi, edi
+	xor ebx, ebx
 
-get_input_process:
-	;; 2. Process input into src
-	mov dword edi, [ebp-4]
+parse_src_process:	
+	;; Process input into src
 	xor eax, eax
 	mov byte al, [buf+edi] 	; current character
 
 	;; If current character is a valid brainfuck character
 	cmp al, 0x3e		; '>'
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x3c		; '<'
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x2b		; '+'
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x2d		; '-'
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x2e		; '.'
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x2c		; ','
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x5b		; '['
-	je get_input_save_to_src
+	je parse_src_process_save
 	cmp al, 0x5d		; ']'
-	je get_input_save_to_src
-	;; Else, skip
-	jmp get_input_process_loop
+	je parse_src_process_save
+	cmp al, 0x00
+	je parse_src_exit
+	;; Else, loop
+	jmp parse_src_process_loop
 
-get_input_save_to_src:	
-	;;    Save to src
-	mov byte [src+edi], al 	; save to src
+parse_src_process_save:	
+	;; Save to src
+	mov byte [src+ebx], al 	; save to src
+	add ebx, 1
 
-get_input_process_loop:	
-	;;    Check if current char == '\0'
-	test al, al 		; ZF = 1 if cur char is \0
-	jz get_input_exit
-	
-	;; 2.2. Increment i and loop
+parse_src_process_loop:	
+	;; Increment i and loop
 	add edi, 1
-	mov dword [ebp-4], edi
-	jmp get_input_process
+	jmp parse_src_process
 	
-get_input_exit:
+parse_src_exit:
 	;; Set size of src
-	mov dword edi, [ebp-4]
-	mov dword [src_sz], edi
+	mov dword [src_sz], ebx
 	
 	;; Epilogue
-	add esp, 0x4 		; dealloc space for i
 	pop ebp
 	ret
 
-	
+;;; start
 _start:
 	call get_input
+	call parse_src
 
 	;; write(unsigned int fd, const char *buf, size_t count)
 	mov eax, 4

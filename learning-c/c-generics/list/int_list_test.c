@@ -10,7 +10,6 @@ int main()
     size_t testDynamicArrLen;
     size_t maxLen;
     int_list_res res;
-    int err;
 
     /* Test list_new() */
     printf("Test: list_new(): ");
@@ -44,8 +43,7 @@ int main()
     ls = int_list_new();
     testDynamicArrLen = 10;
     for (size_t i = 0; i < testDynamicArrLen; i++) {
-        err = int_list_push(ls, i);
-        assert(err == 0);
+        assert(int_list_push(ls, i));
         res = int_list_get(ls, i);
         assert(res.error == 0);
         assert(res.value == i);
@@ -92,20 +90,17 @@ int main()
     printf("Test: list insertion: ");
     ls = int_list_new(5);
     assert(ls->len == 0);
-    err = int_list_insert(ls, 1, 5);
-    assert(err != 0); // should not insert since out-of-bounds
+    assert(!int_list_insert(ls, 1, 5)); // should not insert since out-of-bounds
     assert(ls->len == 0);
 
     // Test insertion into empty list ([5])
-    err = int_list_insert(ls, 0, 5);
-    assert(err == 0);
+    assert(int_list_insert(ls, 0, 5));
     assert(ls->len == 1);
     assert(int_list_get(ls, 0).error == 0);
     assert(int_list_get(ls, 0).value == 5);
 
     // Test insertion at start ([3, 5]) (index 0)
-    err = int_list_insert(ls, 0, 3);
-    assert(err == 0);
+    assert(int_list_insert(ls, 0, 3));
     assert(ls->len == 2);
     assert(int_list_get(ls, 0).error == 0);
     assert(int_list_get(ls, 0).value == 3);
@@ -113,8 +108,7 @@ int main()
     assert(int_list_get(ls, 1).value == 5);
 
     // Test insertion at end ([3, 5, 7]) (index 2)
-    err = int_list_insert(ls, 2, 7);
-    assert(err == 0);
+    assert(int_list_insert(ls, 2, 7));
     assert(ls->len == 3);
     assert(int_list_get(ls, 0).error == 0);
     assert(int_list_get(ls, 0).value == 3);
@@ -124,8 +118,7 @@ int main()
     assert(int_list_get(ls, 2).value == 7);
 
     // Test insertion in middle ([3, 4, 5, 7]) (index 1)
-    err = int_list_insert(ls, 1, 4);
-    assert(err == 0);
+    assert(int_list_insert(ls, 1, 4));
     assert(ls->len == 4);
     assert(int_list_get(ls, 0).error == 0);
     assert(int_list_get(ls, 0).value == 3);
@@ -136,8 +129,7 @@ int main()
     assert(int_list_get(ls, 3).value == 7);
 
     // Test insertion in middle ([3, 4, 5, 6, 7]) (index 3)
-    err = int_list_insert(ls, 3, 6);
-    assert(err == 0);
+    assert(int_list_insert(ls, 3, 6));
     assert(ls->len == 5);
     assert(int_list_get(ls, 0).error == 0);
     assert(int_list_get(ls, 0).value == 3);

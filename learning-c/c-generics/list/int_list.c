@@ -15,10 +15,8 @@ int_list *int_list_new()
 int_list *int_list_from_arr(int *arr, size_t arrLen)
 {
     int_list *ls = int_list_new();
-    int err;
     for (size_t i = 0; i < arrLen; i++) {
-        err = int_list_push(ls, arr[i]);
-        if (err) {
+        if (!int_list_push(ls, arr[i])) {
             int_list_free(ls);
             return NULL;
         }
@@ -64,15 +62,15 @@ int_list_res int_list_get(int_list *ls, size_t idx)
 int int_list_insert(int_list *ls, size_t idx, int val)
 {
     if (idx > ls->len)
-        return 1;
+        return 0;
     
     if (!_int_list_updateMaxLen(ls))
-        return 1;
+        return 0;
 
     if (idx == ls->len) {
         ls->items[ls->len] = val;
         ls->len++;
-        return 0;
+        return 1;
     }
 
     // Otherwise, shift all values from idx onwards to the right
@@ -80,7 +78,7 @@ int int_list_insert(int_list *ls, size_t idx, int val)
         ls->items[i] = ls->items[i-1];
     ls->items[idx] = val;
     ls->len++;
-    return 0;
+    return 1;
 }
 
 int int_list_push(int_list *ls, int val)

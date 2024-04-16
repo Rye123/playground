@@ -21,12 +21,12 @@ void int_list_clear(int_list *ls);
 
 int_list_res int_list_get(int_list *ls, size_t idx);
 
-// Returns 0 if success
+// Returns 1 if success
 int int_list_push(int_list *ls, int val);
 int_list_res int_list_pop(int_list *ls);
 int_list_res int_list_dequeue(int_list *ls);
 
-// Returns 0 if success
+// Returns 1 if success
 int int_list_insert(int_list *ls, size_t idx, int val);
 int_list_res int_list_remove(int_list *ls, size_t idx);
 

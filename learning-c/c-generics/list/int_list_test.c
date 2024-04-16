@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <assert.h>
-#include "int_list.h"
+#include "list.h"
+
+DECL_LIST(int_list, int);
 
 int main()
 {
@@ -16,7 +18,7 @@ int main()
     ls = int_list_new();
     assert(ls != NULL);
     assert(ls->len == 0);
-    assert(ls->maxLen == DEFAULT_MAXLEN);
+    assert(ls->maxLen == _LIST_DFLT_SZ_);
     // Test out of bounds access
     assert(int_list_get(ls, 0).error != 0);
     assert(int_list_get(ls, 5).error != 0);
@@ -64,7 +66,7 @@ int main()
 
     /* Test list_push(), list_dequeue(), list_get() */
     printf("Test: list push/dequeue: ");
-    ls = int_list_new(5);
+    ls = int_list_new();
     testDynamicArrLen = 10;
     for (size_t i = 0; i < testDynamicArrLen; i++) {
         int_list_push(ls, i);
@@ -88,7 +90,7 @@ int main()
     
     /* Test list_insert() */
     printf("Test: list insertion: ");
-    ls = int_list_new(5);
+    ls = int_list_new();
     assert(ls->len == 0);
     assert(!int_list_insert(ls, 1, 5)); // should not insert since out-of-bounds
     assert(ls->len == 0);
